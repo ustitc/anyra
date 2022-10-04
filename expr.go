@@ -19,43 +19,43 @@ func (o *Operator) Capture(s []string) error {
 }
 
 type Value struct {
-	Dice          *Dice       `@@`
-	Number        *float64    `|  @Int`
-	Subexpression *Expression `| "(" @@ ")"`
+	Dice          *Dice       `parser:"@@"`
+	Number        *float64    `parser:"|  @Int"`
+	Subexpression *Expression `parser:"| '(' @@ ')'"`
 }
 
 type Dice struct {
-	StandardDice *StandardDice `@@`
-	SimpleDice   *SimpleDice   `| @@`
+	StandardDice *StandardDice `parser:"@@"`
+	SimpleDice   *SimpleDice   `parser:"| @@"`
 }
 
 type StandardDice struct {
-	Count *float64 `@Int`
-	Value *float64 `"d" @Int`
+	Count *float64 `parser:"@Int"`
+	Value *float64 `parser:"'d' @Int"`
 }
 
 type SimpleDice struct {
-	Value *float64 `"d" @Int`
+	Value *float64 `parser:"'d' @Int"`
 }
 
 type OpFactor struct {
-	Operator Operator `@("*" | "/")`
-	Base     *Value   `@@`
+	Operator Operator `parser:"@('*' | '/')"`
+	Base     *Value   `parser:"@@"`
 }
 
 type Term struct {
-	Left  *Value      `@@`
-	Right []*OpFactor `@@*`
+	Left  *Value      `parser:"@@"`
+	Right []*OpFactor `parser:"@@*"`
 }
 
 type OpTerm struct {
-	Operator Operator `@("+" | "-")`
-	Term     *Term    `@@`
+	Operator Operator `parser:"@('+' | '-')"`
+	Term     *Term    `parser:"@@"`
 }
 
 type Expression struct {
-	Left  *Term     `@@`
-	Right []*OpTerm `@@*`
+	Left  *Term     `parser:"@@"`
+	Right []*OpTerm `parser:"@@*"`
 }
 
 // Evaluation
