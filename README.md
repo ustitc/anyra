@@ -152,4 +152,6 @@ Response: `200 OK`
 |Name|Type|Required|Description|
 |----|----|--------|-----------|
 |words|[]string|true|Words for markov chain|
+|order|int|false|Order of markov chain|
+|separator|string|false|Separator with which to divide words|
 |count|int|false|Number of words to generate|
