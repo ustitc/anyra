@@ -45,6 +45,12 @@ Response: `200 OK`
 }
 ```
 
+**Request Parameters**
+
+|Name|Type|Required|Description|
+|----|----|--------|-----------|
+|values|[]string|true|Values to pick from|
+|count|int|false|Number of values to pick|
 
 ## `/shuffle`
 
@@ -77,6 +83,12 @@ Response: `200 OK`
 }
 ```
 
+**Request Parameters**
+
+|Name|Type|Required|Description|
+|----|----|--------|-----------|
+|values|[]string|true|Values to shuffle|
+
 ## `/roll`
 
 Uses [dice syntax](https://en.wikipedia.org/wiki/Dice_notation) to generate random numbers.
@@ -104,6 +116,10 @@ Response: `200 OK`
 }
 ```
 
+|Name|Type|Required|Description|
+|----|----|--------|-----------|
+|expr|string|true|Dice expression|
+
 ## `/markov`
 
 ``` bash
@@ -128,3 +144,8 @@ Response: `200 OK`
   ]
 }
 ```
+
+|Name|Type|Required|Description|
+|----|----|--------|-----------|
+|words|[]string|true|Words for markov chain|
+|count|int|false|Number of words to generate|
