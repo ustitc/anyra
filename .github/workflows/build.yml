@@ -1,4 +1,8 @@
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+
 name: Build
 jobs:
   build:
