@@ -14,7 +14,7 @@ type ShuffleRequest struct {
 }
 
 type ShuffleResponse struct {
-	Results []string `json:"result" query:"result"`
+	Result []string `json:"result"`
 }
 
 type PickRequest struct {
@@ -23,7 +23,7 @@ type PickRequest struct {
 }
 
 type PickResponse struct {
-	Results []string `json:"result" query:"result"`
+	Result []string `json:"result"`
 }
 
 type RollRequest struct {
@@ -31,7 +31,7 @@ type RollRequest struct {
 }
 
 type RollResponse struct {
-	Result float64 `json:"result" query:"result"`
+	Result float64 `json:"result"`
 }
 
 type MarkovRequest struct {
@@ -56,7 +56,7 @@ func shuffle(c echo.Context) error {
 	rand.Shuffle(len(req.Values), func(i, j int) {
 		req.Values[i], req.Values[j] = req.Values[j], req.Values[i]
 	})
-	return c.JSON(http.StatusOK, ShuffleResponse{Results: req.Values})
+	return c.JSON(http.StatusOK, ShuffleResponse{Result: req.Values})
 }
 
 func pick(c echo.Context) error {
@@ -75,7 +75,7 @@ func pick(c echo.Context) error {
 	for i := 0; i < int(req.Limit); i++ {
 		results[i] = req.Values[rand.Intn(len(req.Values))]
 	}
-	return c.JSON(http.StatusOK, PickResponse{Results: results})
+	return c.JSON(http.StatusOK, PickResponse{Result: results})
 }
 
 func roll(c echo.Context) error {

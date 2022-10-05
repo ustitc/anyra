@@ -23,7 +23,7 @@ func TestShuffle(t *testing.T) {
 	if assert.NoError(t, shuffle(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Contains(t, response.Results, "Sword", "Axe", "Bow")
+			assert.Contains(t, response.Result, "Sword", "Axe", "Bow")
 		}
 	}
 }
@@ -40,7 +40,7 @@ func TestPick(t *testing.T) {
 	if assert.NoError(t, pick(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Len(t, response.Results, 1)
+			assert.Len(t, response.Result, 1)
 		}
 	}
 }
@@ -57,7 +57,7 @@ func TestPickWithLimit(t *testing.T) {
 	if assert.NoError(t, pick(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Len(t, response.Results, 2)
+			assert.Len(t, response.Result, 2)
 		}
 	}
 }
