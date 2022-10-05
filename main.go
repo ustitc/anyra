@@ -3,26 +3,10 @@ package main
 import (
 	"log"
 	"os"
-	"text/scanner"
-	"unicode"
 
-	"github.com/alecthomas/participle/v2"
-	"github.com/alecthomas/participle/v2/lexer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
-)
-
-var (
-	lex = lexer.NewTextScannerLexer(func(s *scanner.Scanner) {
-		// to parse d20 without whitespaces
-		s.IsIdentRune = func(ch rune, i int) bool {
-			return unicode.IsDigit(ch) && i > 0
-		}
-	})
-	parser = participle.MustBuild[Expression](
-		participle.Lexer(lex),
-	)
 )
 
 func main() {

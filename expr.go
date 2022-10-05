@@ -1,6 +1,13 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+	"text/scanner"
+	"unicode"
+
+	"github.com/alecthomas/participle/v2"
+	"github.com/alecthomas/participle/v2/lexer"
+)
 
 type Operator int
 
@@ -11,7 +18,18 @@ const (
 	OpSub
 )
 
-var operatorMap = map[string]Operator{"+": OpAdd, "-": OpSub, "*": OpMul, "/": OpDiv}
+var (
+	operatorMap = map[string]Operator{"+": OpAdd, "-": OpSub, "*": OpMul, "/": OpDiv}
+	lex         = lexer.NewTextScannerLexer(func(s *scanner.Scanner) {
+		// to parse d20 without whitespaces
+		s.IsIdentRune = func(ch rune, i int) bool {
+			return unicode.IsDigit(ch) && i > 0
+		}
+	})
+	parser = participle.MustBuild[Expression](
+		participle.Lexer(lex),
+	)
+)
 
 func (o *Operator) Capture(s []string) error {
 	*o = operatorMap[s[0]]
