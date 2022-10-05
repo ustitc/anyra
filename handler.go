@@ -19,7 +19,7 @@ type ShuffleResponse struct {
 
 type PickRequest struct {
 	Values []string `json:"values" query:"values" validate:"required"`
-	Limit  int      `json:"limit" query:"limit"`
+	Count  int      `json:"count" query:"count"`
 }
 
 type PickResponse struct {
@@ -61,18 +61,18 @@ func shuffle(c echo.Context) error {
 
 func pick(c echo.Context) error {
 	req := new(PickRequest)
-	req.Limit = 1
+	req.Count = 1
 	if err := c.Bind(req); err != nil {
 		return err
 	}
-	if req.Limit <= 0 {
-		return echo.NewHTTPError(http.StatusBadRequest, "Limit field must be greater than zero")
+	if req.Count <= 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "Count field must be greater than zero")
 	}
 	if len(req.Values) <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Values field must contain at least one value")
 	}
-	results := make([]string, req.Limit)
-	for i := 0; i < int(req.Limit); i++ {
+	results := make([]string, req.Count)
+	for i := 0; i < int(req.Count); i++ {
 		results[i] = req.Values[rand.Intn(len(req.Values))]
 	}
 	return c.JSON(http.StatusOK, PickResponse{Result: results})

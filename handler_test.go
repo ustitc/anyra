@@ -45,9 +45,9 @@ func TestPick(t *testing.T) {
 	}
 }
 
-func TestPickWithLimit(t *testing.T) {
+func TestPickWithCount(t *testing.T) {
 	e := echo.New()
-	body := `{ "values": ["Sword", "Axe", "Bow"], "limit": 2 }`
+	body := `{ "values": ["Sword", "Axe", "Bow"], "count": 2 }`
 	req := httptest.NewRequest(http.MethodPost, "/pick", strings.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
