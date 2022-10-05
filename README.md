@@ -116,6 +116,8 @@ Response: `200 OK`
 }
 ```
 
+**Request Parameters**
+
 |Name|Type|Required|Description|
 |----|----|--------|-----------|
 |expr|string|true|Dice expression|
@@ -144,6 +146,8 @@ Response: `200 OK`
   ]
 }
 ```
+
+**Request Parameters**
 
 |Name|Type|Required|Description|
 |----|----|--------|-----------|
