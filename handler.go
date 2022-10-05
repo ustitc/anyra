@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
@@ -11,6 +12,7 @@ import (
 
 type ShuffleRequest struct {
 	Values []string `json:"values" query:"values" validate:"required"`
+	Format string   `json:"format" query:"format"`
 }
 
 type ShuffleResponse struct {
@@ -20,6 +22,7 @@ type ShuffleResponse struct {
 type PickRequest struct {
 	Values []string `json:"values" query:"values" validate:"required"`
 	Count  int      `json:"count" query:"count"`
+	Format string   `json:"format" query:"format"`
 }
 
 type PickResponse struct {
@@ -28,6 +31,7 @@ type PickResponse struct {
 
 type RollRequest struct {
 	Expression string `json:"expr" query:"expr" validate:"required"`
+	Format     string `json:"format" query:"format"`
 }
 
 type RollResponse struct {
@@ -39,16 +43,23 @@ type MarkovRequest struct {
 	Order     int      `json:"order" query:"order"`
 	Separator string   `json:"separator" query:"separator"`
 	Count     int      `json:"count" query:"count"`
+	Format    string   `json:"format" query:"format"`
 }
 
 type MarkovResponse struct {
 	Result []string `json:"result"`
 }
 
+var badFormatFieldResponse = echo.NewHTTPError(http.StatusBadRequest, "Format field must be plain or json")
+
 func shuffle(c echo.Context) error {
 	req := new(ShuffleRequest)
+	req.Format = "json"
 	if err := c.Bind(req); err != nil {
 		return err
+	}
+	if !isCorrectFormat(req.Format) {
+		return badFormatFieldResponse
 	}
 	if len(req.Values) <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Values field must contain at least one value")
@@ -56,14 +67,21 @@ func shuffle(c echo.Context) error {
 	rand.Shuffle(len(req.Values), func(i, j int) {
 		req.Values[i], req.Values[j] = req.Values[j], req.Values[i]
 	})
+	if req.Format == "plain" {
+		return c.String(http.StatusOK, strings.Join(req.Values, ","))
+	}
 	return c.JSON(http.StatusOK, ShuffleResponse{Result: req.Values})
 }
 
 func pick(c echo.Context) error {
 	req := new(PickRequest)
 	req.Count = 1
+	req.Format = "json"
 	if err := c.Bind(req); err != nil {
 		return err
+	}
+	if !isCorrectFormat(req.Format) {
+		return badFormatFieldResponse
 	}
 	if req.Count <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Count field must be greater than zero")
@@ -75,19 +93,29 @@ func pick(c echo.Context) error {
 	for i := 0; i < int(req.Count); i++ {
 		results[i] = req.Values[rand.Intn(len(req.Values))]
 	}
+	if req.Format == "plain" {
+		return c.String(http.StatusOK, strings.Join(results, ","))
+	}
 	return c.JSON(http.StatusOK, PickResponse{Result: results})
 }
 
 func roll(c echo.Context) error {
 	req := new(RollRequest)
+	req.Format = "json"
 	if err := c.Bind(req); err != nil {
 		return err
+	}
+	if !isCorrectFormat(req.Format) {
+		return badFormatFieldResponse
 	}
 	expr, err := parser.ParseString("", req.Expression)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Incorrect expression")
 	}
 	res := expr.Eval()
+	if req.Format == "plain" {
+		return c.String(http.StatusOK, fmt.Sprintf("%.0f", res))
+	}
 	return c.JSON(http.StatusOK, RollResponse{Result: res})
 }
 
@@ -96,8 +124,12 @@ func markov(c echo.Context) error {
 	req.Order = 1
 	req.Count = 1
 	req.Separator = ""
+	req.Format = "json"
 	if err := c.Bind(req); err != nil {
 		return err
+	}
+	if !isCorrectFormat(req.Format) {
+		return badFormatFieldResponse
 	}
 	if len(req.Words) <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Words field must contain at least one word")
@@ -115,7 +147,14 @@ func markov(c echo.Context) error {
 	for i := 0; i < int(req.Count); i++ {
 		results[i] = generate(chain, req.Separator)
 	}
+	if req.Format == "plain" {
+		return c.String(http.StatusOK, strings.Join(results, ","))
+	}
 	return c.JSON(http.StatusOK, MarkovResponse{Result: results})
+}
+
+func isCorrectFormat(format string) bool {
+	return format == "plain" || format == "json"
 }
 
 func generate(chain *gomarkov.Chain, sep string) string {

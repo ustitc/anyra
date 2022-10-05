@@ -47,10 +47,11 @@ Response: `200 OK`
 
 **Request Parameters**
 
-|Name|Type|Required|Description|
-|----|----|--------|-----------|
-|values|[]string|true|Values to pick from|
-|count|int|false|Number of values to pick|
+|Name|Type|Required|Default|Description|
+|----|----|--------|-------|-----------|
+|values|[]string|true|-|Values to pick from|
+|count|int|false|1|Number of values to pick|
+|format|string|false|`json`|What format to use in response (`plain`,`json`) |
 
 ## `/shuffle`
 
@@ -85,9 +86,10 @@ Response: `200 OK`
 
 **Request Parameters**
 
-|Name|Type|Required|Description|
-|----|----|--------|-----------|
-|values|[]string|true|Values to shuffle|
+|Name|Type|Required|Default|Description|
+|----|----|--------|-------|-----------|
+|values|[]string|true|-|Values to shuffle|
+|format|string|false|`json`|What format to use in response (`plain`,`json`) |
 
 ## `/roll`
 
@@ -118,9 +120,10 @@ Response: `200 OK`
 
 **Request Parameters**
 
-|Name|Type|Required|Description|
-|----|----|--------|-----------|
-|expr|string|true|Dice expression|
+|Name|Type|Required|Default|Description|
+|----|----|--------|-------|-----------|
+|expr|string|true|-|Dice expression|
+|format|string|false|`json`|What format to use in response (`plain`,`json`) |
 
 ## `/markov`
 
@@ -149,9 +152,10 @@ Response: `200 OK`
 
 **Request Parameters**
 
-|Name|Type|Required|Description|
-|----|----|--------|-----------|
-|words|[]string|true|Words for markov chain|
-|order|int|false|Order of markov chain|
-|separator|string|false|Separator with which to divide words|
-|count|int|false|Number of words to generate|
+|Name|Type|Required|Default|Description|
+|----|----|--------|-------|-----------|
+|words|[]string|true|-|Words for markov chain|
+|order|int|false|1|Order of markov chain|
+|separator|string|false|""|Separator with which to divide words|
+|count|int|false|1|Number of words to generate|
+|format|string|false|`json`|What format to use in response (`plain`,`json`) |
