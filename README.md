@@ -106,4 +106,25 @@ Response: `200 OK`
 
 ## `/markov`
 
-TODO
+``` bash
+curl 'http://localhost:8080/markov?words=Gayel&words=Broggs&words=Deron&words=Jenzen&words=Adryan&words=Damaris&words=Ragan&words=Rodrock&words=Chindler'
+```
+
+or
+
+``` bash
+curl \
+  -X POST 'http://localhost:8080/roll' \
+  -H 'Content-Type: application/json' \
+  --data-binary '{ "words": ["Gayel", "Broggs", "Deron", "Jenzen", "Adryan", "Damaris", "Ragan", "Rodrock", "Chindler"] }'
+```
+
+Response: `200 OK`
+
+``` json
+{
+  "result":[
+    "Rarodris"
+  ]
+}
+```

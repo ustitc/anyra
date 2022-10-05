@@ -13,31 +13,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type ShuffleRequest struct {
-	Values []string `json:"values" query:"values" validate:"required"`
-}
-
-type ShuffleResponse struct {
-	Results []string `json:"result" query:"result"`
-}
-
-type PickRequest struct {
-	Values []string `json:"values" query:"values" validate:"required"`
-	Limit  int      `json:"limit" query:"limit"`
-}
-
-type PickResponse struct {
-	Results []string `json:"result" query:"result"`
-}
-
-type RollRequest struct {
-	Expression string `json:"expr" query:"expr" validate:"required"`
-}
-
-type RollResponse struct {
-	Result float64 `json:"result" query:"result"`
-}
-
 var (
 	lex = lexer.NewTextScannerLexer(func(s *scanner.Scanner) {
 		// to parse d20 without whitespaces
@@ -94,5 +69,7 @@ func runServer(port string) {
 	e.GET("/pick", pick)
 	e.GET("/roll", roll)
 	e.POST("/roll", roll)
+	e.GET("/markov", markov)
+	e.POST("/markov", markov)
 	e.Logger.Fatal(e.Start(":" + port))
 }
