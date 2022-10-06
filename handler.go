@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 	"strings"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mb-14/gomarkov"
 )
 
 type ShuffleRequest struct {
@@ -52,7 +50,7 @@ type MarkovResponse struct {
 
 var badFormatFieldResponse = echo.NewHTTPError(http.StatusBadRequest, "Format field must be plain or json")
 
-func shuffle(c echo.Context) error {
+func shuffleHandler(c echo.Context) error {
 	req := new(ShuffleRequest)
 	req.Format = "json"
 	if err := c.Bind(req); err != nil {
@@ -64,16 +62,16 @@ func shuffle(c echo.Context) error {
 	if len(req.Values) <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Values field must contain at least one value")
 	}
-	rand.Shuffle(len(req.Values), func(i, j int) {
-		req.Values[i], req.Values[j] = req.Values[j], req.Values[i]
-	})
+
+	res := shuffle(req.Values)
+
 	if req.Format == "plain" {
-		return c.String(http.StatusOK, strings.Join(req.Values, ","))
+		return c.String(http.StatusOK, strings.Join(res, ","))
 	}
-	return c.JSON(http.StatusOK, ShuffleResponse{Result: req.Values})
+	return c.JSON(http.StatusOK, ShuffleResponse{Result: res})
 }
 
-func pick(c echo.Context) error {
+func pickHandler(c echo.Context) error {
 	req := new(PickRequest)
 	req.Count = 1
 	req.Format = "json"
@@ -89,17 +87,16 @@ func pick(c echo.Context) error {
 	if len(req.Values) <= 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Values field must contain at least one value")
 	}
-	results := make([]string, req.Count)
-	for i := 0; i < int(req.Count); i++ {
-		results[i] = req.Values[rand.Intn(len(req.Values))]
-	}
+
+	results := pick(req.Values, req.Count)
+
 	if req.Format == "plain" {
 		return c.String(http.StatusOK, strings.Join(results, ","))
 	}
 	return c.JSON(http.StatusOK, PickResponse{Result: results})
 }
 
-func roll(c echo.Context) error {
+func rollHandler(c echo.Context) error {
 	req := new(RollRequest)
 	req.Format = "json"
 	if err := c.Bind(req); err != nil {
@@ -108,18 +105,19 @@ func roll(c echo.Context) error {
 	if !isCorrectFormat(req.Format) {
 		return badFormatFieldResponse
 	}
-	expr, err := parser.ParseString("", req.Expression)
+
+	res, err := roll(req.Expression)
+
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Incorrect expression")
 	}
-	res := expr.Eval()
 	if req.Format == "plain" {
 		return c.String(http.StatusOK, fmt.Sprintf("%.0f", res))
 	}
 	return c.JSON(http.StatusOK, RollResponse{Result: res})
 }
 
-func markov(c echo.Context) error {
+func markovHandler(c echo.Context) error {
 	req := new(MarkovRequest)
 	req.Order = 1
 	req.Count = 1
@@ -138,15 +136,8 @@ func markov(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Count field must be greater than zero")
 	}
 
-	chain := gomarkov.NewChain(req.Order)
-	for _, word := range req.Words {
-		chain.Add(strings.Split(word, req.Separator))
-	}
+	results := markov(req.Words, req.Order, req.Separator, req.Count)
 
-	results := make([]string, req.Count)
-	for i := 0; i < int(req.Count); i++ {
-		results[i] = generate(chain, req.Separator)
-	}
 	if req.Format == "plain" {
 		return c.String(http.StatusOK, strings.Join(results, ","))
 	}
@@ -155,17 +146,4 @@ func markov(c echo.Context) error {
 
 func isCorrectFormat(format string) bool {
 	return format == "plain" || format == "json"
-}
-
-func generate(chain *gomarkov.Chain, sep string) string {
-	order := chain.Order
-	tokens := make([]string, 0)
-	for i := 0; i < order; i++ {
-		tokens = append(tokens, gomarkov.StartToken)
-	}
-	for tokens[len(tokens)-1] != gomarkov.EndToken {
-		next, _ := chain.Generate(tokens[(len(tokens) - order):])
-		tokens = append(tokens, next)
-	}
-	return strings.Join(tokens[order:len(tokens)-1], sep)
 }

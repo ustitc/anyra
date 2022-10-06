@@ -20,7 +20,7 @@ func TestShuffle(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	response := ShuffleResponse{}
-	if assert.NoError(t, shuffle(c)) {
+	if assert.NoError(t, shuffleHandler(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Contains(t, response.Result, "Sword", "Axe", "Bow")
@@ -37,7 +37,7 @@ func TestPick(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	response := PickResponse{}
-	if assert.NoError(t, pick(c)) {
+	if assert.NoError(t, pickHandler(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Len(t, response.Result, 1)
@@ -54,7 +54,7 @@ func TestPickWithCount(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	response := PickResponse{}
-	if assert.NoError(t, pick(c)) {
+	if assert.NoError(t, pickHandler(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Len(t, response.Result, 2)
@@ -71,7 +71,7 @@ func TestRoll(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	response := RollResponse{}
-	if assert.NoError(t, roll(c)) {
+	if assert.NoError(t, rollHandler(c)) {
 		if assert.NoError(t, json.NewDecoder(rec.Body).Decode(&response)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Greater(t, response.Result, 3.0)

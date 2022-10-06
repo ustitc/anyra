@@ -4,12 +4,12 @@
 
 ---
 
-**Anyra** (any random) - server for any kind of random generation you need.
+**Anyra** (any random) - tool for any kind of random generation you need.
 
 To run a server:
 
 ``` bash
-anyra run
+anyra server
 ```
 
 This will start a server on default port `8080`.
