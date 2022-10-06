@@ -1,5 +1,9 @@
 # Anyra
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/ustits/anyra)](https://goreportcard.com/report/github.com/ustits/anyra)
+
+---
+
 **Anyra** (any random) - server for any kind of random generation you need.
 
 To run a server:
