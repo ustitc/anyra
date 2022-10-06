@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type ShuffleRequest struct {
@@ -49,6 +50,26 @@ type MarkovResponse struct {
 }
 
 var badFormatFieldResponse = echo.NewHTTPError(http.StatusBadRequest, "Format field must be plain or json")
+
+func runServer(port string) {
+	e := echo.New()
+
+	e.HideBanner = true
+
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
+
+	e.GET("/shuffle", shuffleHandler)
+	e.POST("/shuffle", shuffleHandler)
+	e.POST("/pick", pickHandler)
+	e.GET("/pick", pickHandler)
+	e.GET("/roll", rollHandler)
+	e.POST("/roll", rollHandler)
+	e.GET("/markov", markovHandler)
+	e.POST("/markov", markovHandler)
+	e.Logger.Fatal(e.Start(":" + port))
+}
 
 func shuffleHandler(c echo.Context) error {
 	req := new(ShuffleRequest)

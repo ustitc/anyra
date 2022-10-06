@@ -6,8 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
 )
 
@@ -119,24 +117,4 @@ func main() {
 		log.Fatal(err)
 	}
 
-}
-
-func runServer(port string) {
-	e := echo.New()
-
-	e.HideBanner = true
-
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}\n",
-	}))
-
-	e.GET("/shuffle", shuffleHandler)
-	e.POST("/shuffle", shuffleHandler)
-	e.POST("/pick", pickHandler)
-	e.GET("/pick", pickHandler)
-	e.GET("/roll", rollHandler)
-	e.POST("/roll", rollHandler)
-	e.GET("/markov", markovHandler)
-	e.POST("/markov", markovHandler)
-	e.Logger.Fatal(e.Start(":" + port))
 }
