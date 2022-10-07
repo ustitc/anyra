@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -9,12 +10,20 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var countFlag = &cli.IntFlag{
-	Name:    "count",
-	Aliases: []string{"c"},
-	Value:   1,
-	Usage:   "number of values to generate",
-}
+var (
+	countFlag = &cli.IntFlag{
+		Name:    "count",
+		Aliases: []string{"c"},
+		Value:   1,
+		Usage:   "number of values to generate",
+	}
+	fileFlag = &cli.StringFlag{
+		Name:    "file",
+		Aliases: []string{"f"},
+		Usage:   "file with values separated by newline",
+	}
+	fileFailExit = cli.Exit(`Can't read file"`, 1)
+)
 
 func main() {
 	app := &cli.App{
@@ -37,10 +46,16 @@ func main() {
 			{
 				Name:  "shuffle",
 				Usage: "shuffle values",
+				Flags: []cli.Flag{
+					fileFlag,
+				},
 				Action: func(cCtx *cli.Context) error {
-					values := cCtx.Args().Slice()
+					values, err := readValues(cCtx)
+					if err != nil {
+						return fileFailExit
+					}
 					if len(values) == 0 {
-						return cli.Exit(`"anyra shuffle" requires at least 1 argument`, 1)
+						return cli.Exit(`"anyra shuffle" requires at least 1 value`, 1)
 					}
 					res := shuffle(values)
 					fmt.Println(strings.Join(res, ", "))
@@ -52,11 +67,15 @@ func main() {
 				Usage: "pick a value",
 				Flags: []cli.Flag{
 					countFlag,
+					fileFlag,
 				},
 				Action: func(cCtx *cli.Context) error {
-					values := cCtx.Args().Slice()
+					values, err := readValues(cCtx)
+					if err != nil {
+						return fileFailExit
+					}
 					if len(values) == 0 {
-						return cli.Exit(`"anyra pick" requires at least 1 argument`, 1)
+						return cli.Exit(`"anyra pick" requires at least 1 value`, 1)
 					}
 					res := pick(values, cCtx.Int("count"))
 					fmt.Println(strings.Join(res, ", "))
@@ -85,6 +104,7 @@ func main() {
 				Usage: "create and evaluate markov chain",
 				Flags: []cli.Flag{
 					countFlag,
+					fileFlag,
 					&cli.IntFlag{
 						Name:    "order",
 						Aliases: []string{"o"},
@@ -99,9 +119,12 @@ func main() {
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					words := cCtx.Args().Slice()
+					words, err := readValues(cCtx)
+					if err != nil {
+						return fileFailExit
+					}
 					if len(words) == 0 {
-						return cli.Exit(`"anyra markov" requires at least 1 argument`, 1)
+						return cli.Exit(`"anyra markov" requires at least 1 value`, 1)
 					}
 					res := markov(words, cCtx.Int("order"), cCtx.String("separator"), cCtx.Int("count"))
 					fmt.Println(strings.Join(res, ", "))
@@ -116,5 +139,27 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func readValues(cCtx *cli.Context) ([]string, error) {
+	file := cCtx.String("file")
+	if file == "" {
+		return cCtx.Args().Slice(), nil
+	}
+	return readLines(file)
+}
+
+func readLines(path string) ([]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
 }
