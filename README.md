@@ -13,13 +13,19 @@
 - **Markov chain** - generate new names or plot hooks with the help of Markov chains
 - **[HTTP API](./docs/api.md)** - run anyra as a server and get all listed features via http
 
-## 🚀 Quick start
+## ⚙️ Installation
 
-Compile from source:
+### From source
+
+Compile from source by cloning this repository. [Go version 1.19](https://go.dev/dl/) or higher is required:
 
 ``` bash
+git clone https://github.com/ustits/anyra.git
+cd anyra
 go build
 ```
+
+## 🚀 Quick start
 
 List available commands:
 
