@@ -27,7 +27,9 @@ go build
 
 ## 🚀 Quick start
 
-List available commands:
+For usage examples go to [tutorials section](./docs/tutorial.md).
+
+To discover all by yourself:
 
 ``` bash
 anyra help
