@@ -27,6 +27,8 @@ go build
 
 ## 🚀 Quick start
 
+![Example](./example.gif)
+
 For usage examples go to [tutorials section](./docs/tutorial.md).
 
 To discover all by yourself:
@@ -40,3 +42,5 @@ To run a server on default `8080` port:
 ``` bash
 anyra server
 ```
+
+For server documentation go to [api section](./docs/api.md).

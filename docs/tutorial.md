@@ -1,13 +1,13 @@
 # Tutorials
 
-- [Set an order for a stand-up meeting](#set-an-order-for-a-stand-up-meeting)
+- [Set order for a stand-up meeting](#set-order-for-a-stand-up-meeting)
 - [Choose a task to be done first](#choose-a-task-to-be-done-first)
 - [Cast a fireball](#cast-a-fireball)
 - [Generate names for your fantasy race](#generate-names-for-your-fantasy-race)
 
-## Set an order for a stand-up meeting
+## Set order for a stand-up meeting
 
-You are tired of the same stand-up every day. Spice it up with randomness. Pass your colleagues names in `shuffle`:
+You are tired of the same stand-up every day. Spice it up with randomness. Pass your colleague names in `shuffle`:
 
 ``` bash
 anyra shuffle Oleg Julia Daniele Ahmed Bethel Liu
