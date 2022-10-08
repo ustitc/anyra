@@ -4,6 +4,7 @@
 - [Choose a task to be done first](#choose-a-task-to-be-done-first)
 - [Cast a fireball](#cast-a-fireball)
 - [Generate names for your fantasy race](#generate-names-for-your-fantasy-race)
+- [Use Anyra on smartphone](#use-anyra-on-smartphone)
 
 ## Set order for a stand-up meeting
 
@@ -77,3 +78,28 @@ anyra markov --file names.txt --count 3
 
 Lorgak, Los, Korfak
 ```
+
+## Use Anyra on smartphone
+
+You are away from computer and need one of your scenarios. Anyra is shipped with http server so you can access it from other devices. 
+
+
+1. Setup server. It can be any VPS/cloud provider or your own computer with [tailscale](https://tailscale.com)
+
+1. Run anyra as a `server`:
+
+``` bash
+anyra server
+
+⇨ http server started on [::]:8080
+```
+
+2. Open browser on your smartphone and type desired scenario:
+
+```
+http://<your_address>:8080/pick?values=Do&values=Delegate&values=Skip&format=plain
+```
+
+3. Add address to bookmarks
+
+Api documentation for each scenario can be found [here](./api.md).
