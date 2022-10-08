@@ -1,11 +1,11 @@
 # Tutorials
 
-- [Set an order for a stand-up meeting](#↑-set-an-order-for-a-stand-up-meeting)
-- [Choose a task to be done first](#↑-choose-a-task-to-be-done-first)
-- [Cast a fireball](#↑-cast-a-fireball)
-- [Generate names for your fantasy race](#↑-generate-names-for-your-fantasy-race)
+- [Set an order for a stand-up meeting](#set-an-order-for-a-stand-up-meeting)
+- [Choose a task to be done first](#choose-a-task-to-be-done-first)
+- [Cast a fireball](#cast-a-fireball)
+- [Generate names for your fantasy race](#generate-names-for-your-fantasy-race)
 
-## [↑](#) Set an order for a stand-up meeting
+## Set an order for a stand-up meeting
 
 You are tired of the same stand-up every day. Spice it up with randomness. Pass your colleagues names in `shuffle`:
 
@@ -23,7 +23,7 @@ echo "Oleg\nJulia\nDaniele\nAhmed\nBethel\nLiu" > my_team.txt
 anyra shuffle --file my_team.txt
 ```
 
-## [↑](#) Choose a task to be done first
+## Choose a task to be done first
 
 Suppose you have such backlog in `todo.txt`:
 
@@ -42,7 +42,7 @@ anyra pick --file todo.txt
 Write documentation for /user endpoint
 ```
 
-## [↑](#) Cast a fireball
+## Cast a fireball
 
 You play DnD as a mage and need to cast a fireball.
 
@@ -54,10 +54,10 @@ You play DnD as a mage and need to cast a fireball.
 Build the expression and use `roll`:
 
 ``` bash
-anyra roll 8d6 + 2d6 +d4 + 3
+anyra roll 8d6 + 2d6 + d4 + 3
 ```
 
-## [↑](#) Generate names for your fantasy race
+## Generate names for your fantasy race
 
 You have a file `names.txt` with samples of names for your new flying slug race:
 
