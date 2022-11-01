@@ -27,7 +27,7 @@ go build
 
 ## 🚀 Quick start
 
-![Example](./example.gif)
+![Example](./docs/example.gif)
 
 For usage examples go to [tutorials section](./docs/tutorial.md).
 
